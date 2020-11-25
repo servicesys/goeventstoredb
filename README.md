@@ -1,2 +1,2 @@
 # goeventstoredb
-EVENT STORE GOLANG 
+EVENT STORE GOLANG  

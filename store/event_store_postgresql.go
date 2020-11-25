@@ -39,7 +39,7 @@ func (handler *EventStorePostgresql) Save(event core.Event) error {
 	return err
 }
 
-func (handler *EventStorePostgresql) Load(aggregateID int64, aggregateType string, domain string ) ([]core.Event, error) {
+func (handler *EventStorePostgresql) Load(aggregateID int64, aggregateType string, domain string) ([]core.Event, error) {
 
 	strQuery :=
 		`SELECT event_id, 
@@ -55,9 +55,9 @@ func (handler *EventStorePostgresql) Load(aggregateID int64, aggregateType strin
 		 FROM eventstore.event  
 		WHERE aggregate_id = $1 AND aggregate_type = $2 AND  domain_tenant = $3`
 
-	rows, err := handler.DBConnection.Query(context.Background(), strQuery, aggregateID, aggregateType,domain)
+	rows, err := handler.DBConnection.Query(context.Background(), strQuery, aggregateID, aggregateType, domain)
 
-	var events = []core.Event{}
+	var events []core.Event
 
 	for rows.Next() {
 
