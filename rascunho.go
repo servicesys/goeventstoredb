@@ -37,8 +37,8 @@ func main() {
 
 	uuid, _ := uuid.DefaultGenerator.NewV1()
 	jsonRow := `{
-    "firstName" : "George" ,
-     "lastName"  : "Lucas"
+    "firstName" : "George" , 
+    "lastName"  : "Lucas"
     }`
 
 	schemaRaw := `{
@@ -67,12 +67,26 @@ func main() {
 		MetaData:      []byte(schemaRaw),
 		UserID:        "merlin" ,
 	    DomainTenant: "castelo-brasil"}
-	errSave := eventStore.Save(event)
-	if err != nil {
-		fmt.Println(errSave)
+
+
+	valid , errStr := eventStore.Validate(event)
+	if valid {
+
+		errSave := eventStore.Save(event)
+		if err != nil {
+			fmt.Println(errSave)
+		}
+
+
+		events, errLoad := eventStore.Load(410, "mytype" , "castelo-brasil")
+		fmt.Println(errLoad)
+		fmt.Println(string(events[0].Payload))
+
+	}else {
+
+		fmt.Println(errStr)
 	}
 
-	events, errLoad := eventStore.Load(410, "mytype" , "castelo-brasil")
-	fmt.Println(errLoad)
-	fmt.Println(string(events[0].Payload))
+
+
 }
