@@ -2,6 +2,7 @@ package store
 
 import (
 	"context"
+	"fmt"
 	"github.com/jackc/pgx/v4"
 	"github.com/servicesys/goeventstoredb/core"
 	"github.com/servicesys/jsonschema/schema"
@@ -25,8 +26,8 @@ func (eventSore *EventStorePostgresql) Save(event core.Event) error {
 
 	strSQL := ` INSERT INTO eventstore.event(event_id, event_type, 
              event_version,aggregate_id, payload,
-             meta_data,user_id,aggregate_type,domain_tenant,created_at) 
-             VALUES($1, $2 ,  $3 , $4 , $5 , $6 , $7 , $8 , $9 ,CURRENT_TIMESTAMP  at time zone 'utc' )`
+             meta_data,user_id,aggregate_type,domain_tenant, app_name , transaction_id , created_at) 
+             VALUES($1, $2 ,  $3 , $4 , $5 , $6 , $7 , $8 , $9 , $10 , $11 , CURRENT_TIMESTAMP  at time zone 'utc' )`
 
 	_, err := eventSore.DBConnection.Exec(context.Background(), strSQL,
 		event.EventID,
@@ -37,7 +38,9 @@ func (eventSore *EventStorePostgresql) Save(event core.Event) error {
 		event.MetaData,
 		event.UserID,
 		event.AggregateType,
-		event.DomainTenant)
+		event.DomainTenant,
+		event.AppName,
+		event.TransactionID)
 
 	return err
 }
@@ -54,7 +57,9 @@ func (eventSore *EventStorePostgresql) Load(aggregateID int64, aggregateType str
 		 created_at,
 		 user_id, 
 		 aggregate_type,
-         domain_tenant
+         domain_tenant,
+		 app_name,
+		 transaction_id
 		 FROM eventstore.event  
 		WHERE aggregate_id = $1 AND aggregate_type = $2 AND  domain_tenant = $3`
 
@@ -75,7 +80,14 @@ func (eventSore *EventStorePostgresql) Load(aggregateID int64, aggregateType str
 			&event.CreatedAt,
 			&event.UserID,
 			&event.AggregateType,
-			&event.DomainTenant)
+			&event.DomainTenant,
+			&event.AppName,
+			&event.TransactionID)
+
+			
+		
+
+			fmt.Println(event)
 
 		if err != nil {
 			return nil, err

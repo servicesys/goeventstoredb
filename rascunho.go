@@ -21,6 +21,7 @@ const (
 
 func main() {
 
+	//Colocar o PGPool 
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
 		"password=%s dbname=%s sslmode=disable",
 		host, port, user, password, dbname)
@@ -57,6 +58,7 @@ func main() {
     "required": ["firstName", "lastName"]
   }`
 
+  for i := 0; i < 100; i++ { 
 	event := core.Event{
 		EventID:       uuid.String(),
 		EventType:     "eventFired",
@@ -66,21 +68,25 @@ func main() {
 		Payload:       []byte(jsonRow),
 		MetaData:      []byte(schemaRaw),
 		UserID:        "merlin" ,
+		AppName : "cmd" , 
+		TransactionID : core.GenerateTransactionID(),
 	    DomainTenant: "castelo-brasil"}
 
+		fmt.Println(event.TransactionID)
 
 	valid , errStr := eventStore.Validate(event)
 	if valid {
 
 		errSave := eventStore.Save(event)
-		if err != nil {
+		if errSave != nil {
 			fmt.Println(errSave)
+			panic(errSave)
 		}
-
-
-		events, errLoad := eventStore.Load(410, "mytype" , "castelo-brasil")
-		fmt.Println(errLoad)
-		fmt.Println(string(events[0].Payload))
+	
+  
+		//events, errLoad := eventStore.Load(410, "mytype" , "castelo-brasil")
+		//fmt.Println(errLoad)
+		//fmt.Println(string(events[0].Payload))
 
 	}else {
 
@@ -88,5 +94,5 @@ func main() {
 	}
 
 
-
+   }
 }
