@@ -20,6 +20,12 @@ type Event struct {
 	UserID        string
 }
 
+
+
+type EventType struct {
+	ID       string
+	MetaData []byte
+}
 func GenerateTransactionID() string {
 	//Max random value, a 130-bits integer, i.e 2^130 - 1
 	max := new(big.Int)

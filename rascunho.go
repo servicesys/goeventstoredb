@@ -79,7 +79,7 @@ func main() {
 		valid, errStr := eventStore.Validate(event)
 		if valid {
 
-			errSave := eventStore.Save(event)
+			errSave := eventStore.SaveEvent(event)
 			if errSave != nil {
 				fmt.Println(errSave)
 				panic(errSave)

@@ -2,14 +2,14 @@ package store
 
 import (
 	"context"
+	"errors"
 	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/servicesys/goeventstoredb/core"
 	"github.com/servicesys/jsonschema/schema"
 )
 
 type EventStorePostgresql struct {
-	//DBConnection  *pgx.Conn
-	PoolDB  *pgxpool.Pool
+	PoolDB        *pgxpool.Pool
 	JsonValidator schema.JsonSchemaValidator
 }
 
@@ -22,7 +22,7 @@ func NewEventStore(poolDB *pgxpool.Pool) *EventStorePostgresql {
 	return &EventStorePostgresql{PoolDB: poolDB, JsonValidator: schema.JsonSchemaValidatorQri{}}
 }
 
-func (eventSore *EventStorePostgresql) Save(event core.Event) error {
+func (eventSore *EventStorePostgresql) SaveEvent(event core.Event) error {
 
 	strSQL := ` INSERT INTO eventstore.event(event_id, event_type, 
              event_version,aggregate_id, payload,
@@ -43,6 +43,11 @@ func (eventSore *EventStorePostgresql) Save(event core.Event) error {
 		event.TransactionID)
 
 	return err
+}
+
+func (eventSore *EventStorePostgresql) SaveEventType(event core.EventType) error {
+
+	return errors.New("NOT IMPLEMENT")
 }
 
 func (eventSore *EventStorePostgresql) Load(aggregateID int64, aggregateType string, domain string) ([]core.Event, error) {
