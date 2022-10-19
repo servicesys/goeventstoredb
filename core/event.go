@@ -1,12 +1,14 @@
 package core
 
-import "math/big"
-import "crypto/rand"
-import "time"
+import (
+	"crypto/rand"
+	"math/big"
+	"time"
+)
 
 type Event struct {
 	EventID       string
-	EventType     string
+	EventType     EventType
 	DomainTenant  string
 	AppName       string
 	TransactionID string
@@ -15,17 +17,16 @@ type Event struct {
 	AggregateID   int64
 	AggregateType string
 	Payload       []byte
-	MetaData      []byte
 	CreatedAt     time.Time
 	UserID        string
 }
 
-
-
 type EventType struct {
-	ID       string
-	MetaData []byte
+	ID        string
+	MetaData  []byte
+	CreatedAt time.Time
 }
+
 func GenerateTransactionID() string {
 	//Max random value, a 130-bits integer, i.e 2^130 - 1
 	max := new(big.Int)
