@@ -3,6 +3,8 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/servicesys/goeventstoredb/core"
+	"github.com/servicesys/goeventstoredb/store"
 
 	//"github.com/gofrs/uuid"
 	//"math/rand"
@@ -10,9 +12,6 @@ import (
 	//"github.com/gofrs/uuid"
 	"github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
-	"github.com/servicesys/goeventstoredb/core"
-	"github.com/servicesys/goeventstoredb/store"
-
 	//"math/rand"
 	"os"
 )
